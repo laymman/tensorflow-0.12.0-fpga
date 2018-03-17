@@ -109,7 +109,8 @@ def tf_workspace(path_prefix = "", tf_repo_name = ""):
 
   native.http_archive(
     name = "protobuf",
-    url = "http://github.com/google/protobuf/archive/008b5a228b37c054f46ba478ccafa5e855cb16db.tar.gz",
+    #url = "http://github.com/google/protobuf/archive/008b5a228b37c054f46ba478ccafa5e855cb16db.tar.gz",
+    url = "file:////home/rsa-key-20180315/008b5a228b37c054f46ba478ccafa5e855cb16db.tar.gz",
     sha256 = "2737ad055eb8a9bc63ed068e32c4ea280b62d8236578cb4d4120eb5543f759ab",
     strip_prefix = "protobuf-008b5a228b37c054f46ba478ccafa5e855cb16db",
   )
@@ -228,8 +229,9 @@ def tf_workspace(path_prefix = "", tf_repo_name = ""):
 
   native.new_http_archive(
     name = "zlib_archive",
-    # url = "http://zlib.net/zlib-1.2.8.tar.gz",
-    url = "file:////home/lidenghui/tensorflow-0.12.0/download_gz/zlib-1.2.8.tar.gz",
+    url = "http://zlib.net/fossils/zlib-1.2.8.tar.gz",
+    #url = "http://zlib.net/zlib-1.2.8.tar.gz",
+    #url = "file:////home/lidenghui/tensorflow-0.12.0/download_gz/zlib-1.2.8.tar.gz",
     sha256 = "36658cb768a54c1d4dec43c3116c27ed893e88b02ecfcb44f2166f9c0b7f2a0d",
     strip_prefix = "zlib-1.2.8",
     build_file = str(Label("//:zlib.BUILD")),
