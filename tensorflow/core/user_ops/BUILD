@@ -1,34 +1,34 @@
 load("//tensorflow:tensorflow.bzl", "tf_custom_op_library")
 
-tf_custom_op_library(
-    name = "cal_mat_mul.so",
-    srcs = ["cal_mat_mul.cc"],
+#tf_custom_op_library(
+#    name = "cal_mat_mul.so",
+#    srcs = ["cal_mat_mul.cc"],
+#)
+
+#cc_library(
+#   name = "Matrix",
+#   srcs = ["Matrix.h"],
+#   linkopts = ["-lriffa"],
+#)
+
+cc_library(
+   name = "im2col",
+   srcs = ["im2col.h"],
 )
 
 tf_custom_op_library(
-    name = "zero_out.so",
-    srcs = ["zero_out.cc"],
+   name = "conv2d_im2col.so",
+   srcs = ["conv2d_im2col.cc"],
+   deps = [":im2col"],
 )
 
 tf_custom_op_library(
-    name = "test_fpga.so",
-    srcs = ["test_fpga.cc"],
+   name = "conv2d_matmul.so",
+   srcs = ["conv2d_matmul.cc"],
+#   deps = [":Matrix"],
 )
+
 tf_custom_op_library(
-    name = "vec_add_opencl.so",
-    srcs = ["vec_add_opencl.cc"],
-    linkopt = ["-lOpenCL"]
+    name = "conv2d_manual.so",
+    srcs = ["conv2d_manual.cc"],
 )
-
-# cc_library(
-#    name = "Matrix",
-#    srcs = [Matrix.h],
-#    linkopts = ["-lriffa"],
-# )
-
-# tf_custom_op_library(
-#    name = "cal_mat_mul_fpga.so",
-#    srcs = ["cal_mat_mul_fpga.cc"],
-#    deps = [":Matrix"],
-# )
-

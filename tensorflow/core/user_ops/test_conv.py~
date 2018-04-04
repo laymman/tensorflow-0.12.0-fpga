@@ -1,0 +1,18 @@
+import tensorflow as tf
+import numpy as np
+
+class Conv2dManualTest(tf.test.TestCase):
+  def testConv2dManual(self):
+    conv2d_manual_module = tf.load_op_library('/home/jxiao/tensorflow/tensorflow-0.12.0-fpga/bazel-bin/tensorflow/core/user_ops/conv2d_manual.so')
+    with self.test_session():
+      input_ = np.random.randint(0, 9, size=(1, 2, 2, 1))
+      filter_ = np.random.randint(0, 5, size=(1, 1, 1, 1))
+      result = conv2d_manual_module.conv2d_manual(input_.astype(float), filter_.astype(float), [1, 1, 1, 1], 0)
+      output = result.eval()
+      print input_
+      print filter_
+      print output
+      #self.assertAllEqual(output, [[[[1, 2], [3, 4]]]])
+
+if __name__ == "__main__":
+  tf.test.main()

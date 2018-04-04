@@ -487,4 +487,3 @@ fi
 bazel_clean_and_fetch
 
 echo "Configuration finished"
-
