@@ -1,0 +1,126 @@
+#include "tensorflow/core/framework/op_kernel.h"
+#include "third_party/eigen3/unsupported/Eigen/CXX11/Tensor"
+#include "tensorflow/core/framework/shape_inference.h"
+#include "tensorflow/core/platform/logging.h"
+#include <iostream>
+
+/* [[[cog
+import cog
+import generator
+
+helper = generator.generator()
+helper.VisitTree()
+
+includes = helper.getIncludes()
+for include in includes :
+    cog.outl("#include %s" %include)
+]]] */
+// [[[end]]]
+
+using namespace std;
+using namespace tensorflow;
+
+
+/* [[[cog
+opname = helper.getOpName()
+inputs = helper.getInputs()
+outputs = helper.getOutputs()
+cog.outl("#define OPNAME %s" %opname)
+cog.outl("#define OPNAME_S \"%s\"" %opname)
+cog.outl("#define OPNAME_OP %sOp\n\n" %opname)
+cog.outl("REGISTER_OP(OPNAME_S)")
+for input in inputs:
+    cog.outl("\t.Input(\"%s: %s\")" %(input[1], input[0]))
+for output in outputs:
+    cog.outl("\t.Output(\"%s: %s\")" %(output[1], output[0]))
+cog.out(";")
+]]] */
+// [[[end]]]
+
+
+template <typename T>
+class OPNAME_OP : public OpKernel {
+public:
+    explicit OPNAME_OP(OpKernelConstruction* ctx) : OpKernel(ctx) {}
+
+    void Compute(OpKernelContext* ctx) override {
+        DCHECK_EQ(4, ctx->num_inputs());
+
+
+        // inputs
+        /* [[[cog
+        count = 0
+        for input in inputs:
+            cog.outl("const Tensor& %s = ctx->input(%d);" %(input[1], count))
+            count += 1
+        ]]] */
+        // [[[end]]]
+        
+
+        // inter params
+        /* [[[cog
+        inter_params = helper.getInterParams()
+        for param in inter_params:
+            type = ""
+            if param[0][-1] == '*':
+                type = param[0][:-1]
+            else :
+                type = param[0]
+            cog.outl("\t%s %s = 0;" %(type, param[1]))
+        ]]] */
+        // [[[end]]]
+        
+
+        // calls
+        /* [[[cog
+        func_name = helper.getFuncName()
+        outputs_shape = helper.getOutputsShape()
+        params_name = helper.getParamsName()
+        params_type = helper.getParamsType()
+        ret = helper.getRet()
+        first1 = 1
+        for i in range(len(func_name)):
+
+            # ***alloc mem for outputs before using it***
+            if outputs[0][1] in params_name[i] and first1:
+                cog.outl("\n\nTensor *%s = nullptr;" %outputs[0][1])
+                cog.outl("TensorShape output_shape;")
+                for dim in outputs_shape:
+                    cog.outl("output_shape.AddDim(%s);" %dim)
+                cog.outl("OP_REQUIRES_OK(ctx, ctx->allocate_output(0, output_shape, &%s));\n\n" %outputs[0][1])
+                first1 = 0
+
+            # function
+            first2 = 1
+            cog.outl("%s %s(" %(ret[i], func_name[i]))
+            for j in range(len(params_name[i])):
+                name = params_name[i][j]
+                type = params_type[i][j]
+                if first2:
+                    if type[-1] == '*':
+                        cog.out("\t\t\treinterpret_cast<%s>(%s)" %(type, name))
+                    else:
+                        cog.out("\t\t\t%s" %name)
+                    first2 = 0
+                else :
+                    if type[-1] == '*':
+                        cog.out(",\n\t\t\treinterpret_cast<%s>(%s)" %(type, name))
+                    else :
+                        cog.out(",\n\t\t\t%s" %name)
+            cog.out(");\n")
+        ]]] */
+        // [[[end]]]
+    }
+};
+
+
+#define REGISTER_KERNEL(type)                                              \
+    REGISTER_KERNEL_BUILDER(                                               \
+        Name(OPNAME_S).Device(DEVICE_CPU).TypeConstraint<type>("T"),       \
+        OPNAME_OP<type>)
+
+REGISTER_KERNEL(int32);
+REGISTER_KERNEL(float);
+REGISTER_KERNEL(double);
+
+#undef REGISTER_KERNEL

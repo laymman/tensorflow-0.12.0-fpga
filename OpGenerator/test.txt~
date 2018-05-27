@@ -1,0 +1,36 @@
+#include "im2col.h"
+
+INPUT : float input, float filter, int32 stride, int32 padding
+OUTPUT : float output
+
+Conv2dIm2col : padding + im2col_gemm
+
+padding: void* padding (
+                  int* stride, 
+        	      int input_dim_1, 
+        	      int input_dim_2,
+        	      int filter_dim_1, 
+        	      int filter_dim_2,
+                  int* output_dim_0,
+        	      int* output_dim_1, 
+        	      int* output_dim_2,
+				  int* output_dim_3,
+        	      int* pad_top, 
+        	      int* pad_left )
+
+im2col_gemm: void* im2col_gemm (
+                      float* input,
+                      float* filter,
+                      int input_dim_0,
+                      int input_dim_1, 
+                      int input_dim_2,
+                      int input_dim_3,
+                      int filter_dim_1, 
+                      int filter_dim_2,
+                      int filter_dim_3,
+                      int* stride,
+                      int pad_top, 
+                      int pad_left,
+                      int output_dim_1, 
+                      int output_dim_2,
+                      float* output )
